@@ -1,4 +1,5 @@
 package bank.logic;
+import bank.exception.HandledException;
 import bank.interfaces.InterfaceCommon;
 import bank.pojo.CustomerInfo;
 import hashMap.HashMapHandler;
@@ -73,7 +74,7 @@ public class LogicLayer {
             e.printStackTrace();
         }
     }
-    public void showDataAll() {
+    public void showDataAll() throws Exception {
         try {
             HashMap<Long, AccountInfo> accountInfoHashMap=db.showFromAccountTableAll();
             //System.out.println("complete account "+accountInfoHashMap);
@@ -83,6 +84,7 @@ public class LogicLayer {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     public void showData() {
@@ -96,18 +98,7 @@ public class LogicLayer {
             e.printStackTrace();
         }
     }
-//    public HashMap<Integer, AccountInfo> storeAccountDataAll() {
-//        HashMap<Integer, AccountInfo> accountInfoHashMap = null;
-//        try {
-//           accountInfoHashMap = db.showFromAccountTableAll();
-//            System.out.println("Customer inactive"+accountInfoHashMap);
-//
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return accountInfoHashMap;
-//    }
+
 
     public void closeAll() {
         db.closeConnection();
@@ -122,34 +113,26 @@ public class LogicLayer {
             e.printStackTrace();
         }
     }
-    public void deleteAccountData(int delId,long accountNumber){
+    public void deleteAccountData(int delId,long accountNumber) throws HandledException {
         int id = delId;
         long account_number = accountNumber;
         try{
             db.deleteFromAccountTable(id,account_number);
            // HashMapHandler.INSTANCE.dbHashMap.remove(id);
             HashMap<Long, AccountInfo> hash = HashMapHandler.INSTANCE.getAccountInfo(id);
-            hash.remove(account_number);
-            System.out.println("Size is "+hash.size());
-//           HashMap<Long,AccountInfo> map = HashMapHandler.INSTANCE.output(id);
-//            if(map!=null) {
-//                String s="";
-//                for (Long i : map.keySet()) {
-//
-//                    s = s + "The Balance is " + map.get(i).getBalance() + " " + "in " + map.get(i).getBankName() + "\n";
-//                    System.out.println(map);
-//                }
-//                System.out.println("s is " +s);
-//            }
-//            else{
-//                System.out.println("Map is null");
-//            }
-            if(hash.size()==0){
-                db.updateCustomerStatus(id);
-                HashMapHandler.INSTANCE.dbHashMap.remove(id);
-                System.out.println("Your data is completely deleted bcz of 0 accounts");
-            }
+           // if(hash.containsKey(account_number)) {
+                hash.remove(account_number);
+                System.out.println("Size is " + hash.size());
 
+                if (hash.size() == 0) {
+                    db.updateCustomerStatus(id);
+                    HashMapHandler.INSTANCE.dbHashMap.remove(id);
+                    System.out.println("Your data is completely deleted bcz of 0 accounts");
+                }
+           // }
+//            else{
+//                System.out.println("The id is already inactive");
+//            }
         }
         catch(SQLException e){
             e.printStackTrace();
@@ -200,4 +183,28 @@ if(map.containsKey(accNumber)) {
    public void updateCustomerStatusActive(int id, long accountNumber) throws SQLException {
         db.updateCustomerStatusToActive(id,accountNumber);
    }
+   public boolean checkExistId(int customerId){
+       if(HashMapHandler.INSTANCE.dbHashMapAll.containsKey(customerId)) {
+           return true;
+       }
+       else{
+           return false;
+       }
     }
+    public boolean chechIdActive(int customerId){
+        if (HashMapHandler.INSTANCE.dbHashMap.containsKey(customerId)){
+            return  true;
+        }else{
+            return false;
+        }
+    }
+    public boolean checkAccountNumberExist(int customerId,long account_Number){
+        HashMap<Long, AccountInfo> accountInfoHashMap = HashMapHandler.INSTANCE.allAcccountData(customerId);
+        if(accountInfoHashMap.containsKey(account_Number)) {
+            return true;
+        }else{
+            return false;
+        }
+
+        }
+}

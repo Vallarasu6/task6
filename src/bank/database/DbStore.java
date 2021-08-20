@@ -1,4 +1,5 @@
 package bank.database;
+import bank.exception.HandledException;
 import bank.interfaces.InterfaceCommon;
 import bank.pojo.CustomerInfo;
 import pojo_account.AccountInfo;
@@ -13,7 +14,6 @@ public class DbStore implements InterfaceCommon {
         try {
             if(con==null) {
                 con = DriverManager.getConnection("jdbc:mysql://localhost/zoho", "root", "vallaK@6");
-               // System.out.println("Connection Established ");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -22,7 +22,7 @@ public class DbStore implements InterfaceCommon {
 
 
 
-    public HashMap<Long, AccountInfo> showFromAccountTableAll() throws SQLException {
+    public HashMap<Long, AccountInfo> showFromAccountTableAll() throws Exception {
         Statement st = null;
         ResultSet rs = null;
         HashMap<Long, AccountInfo> accountInfoHashMap = new HashMap<>();
@@ -47,6 +47,8 @@ public class DbStore implements InterfaceCommon {
             }
         }catch (Exception e){
             e.printStackTrace();
+
+            throw new HandledException("dghghg");
         }
 
         rs.close();

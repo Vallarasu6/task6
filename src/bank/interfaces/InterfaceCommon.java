@@ -21,5 +21,5 @@ public interface InterfaceCommon {
     void updateCustomerStatus(int id) throws SQLException;
 
     void updateCustomerStatusToActive(int id, long accountNumber) throws SQLException;
-    HashMap<Long, AccountInfo> showFromAccountTableAll() throws SQLException;
+    HashMap<Long, AccountInfo> showFromAccountTableAll() throws SQLException, Exception;
 }

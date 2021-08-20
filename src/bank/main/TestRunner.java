@@ -62,27 +62,53 @@ public class TestRunner {
                         int customerId = scan.nextInt();
                         scan.nextLine();
                        // HashMap<Integer, AccountInfo> accountInfoHashMap =ll.storeAccountDataAll();
-                        HashMap<Long, AccountInfo> accountInfoHashMap = HashMapHandler.INSTANCE.allAcccountData(customerId);
-                       System.out.println(accountInfoHashMap);
-                        if(HashMapHandler.INSTANCE.dbHashMapAll.containsKey(customerId)) {
-                            if (HashMapHandler.INSTANCE.dbHashMap.containsKey(customerId)) {
-                        System.out.println("Enter your Bank Name");
-                        String bank = scan.nextLine();
-                        System.out.println("Enter your Account number");
-                        long accountNumber = scan.nextLong();
-                        System.out.println("Enter your Balance");
-                        long balance = scan.nextLong();
-                        accountInfo = ObjectHandler.accountObject(customerId, bank, accountNumber, balance);
-                                arrayList.add(accountInfo);
+//                        HashMap<Long, AccountInfo> accountInfoHashMap = HashMapHandler.INSTANCE.allAcccountData(customerId);
+                      // System.out.println(accountInfoHashMap);
+                        //if(HashMapHandler.INSTANCE.dbHashMapAll.containsKey(customerId)) {
+                        if(ll.checkExistId(customerId)){
+                           // if (HashMapHandler.INSTANCE.dbHashMap.containsKey(customerId)) {
+                            if(ll.chechIdActive(customerId)){
+                                System.out.println("1.Do u want to create a new account\n2.So u want to activate Exist account\n3.No");
+                                int option = scan.nextInt();
+                                switch (option) {
+                                    case 1: {
+                                        System.out.println("Enter your Bank Name");
+                                        String bank = scan.nextLine();
+                                        System.out.println("Enter your Account number");
+                                        long accountNumber = scan.nextLong();
+                                        System.out.println("Enter your Balance");
+                                        long balance = scan.nextLong();
+                                        accountInfo = ObjectHandler.accountObject(customerId, bank, accountNumber, balance);
+                                        arrayList.add(accountInfo);
+                                    }
+                                    case 2:{
+                                        System.out.println("Enter your Existing Account number");
+                                        long account_Number = scan.nextLong();
+                                        // System.out.println(accountInfoHashMap.get(customerId));
+//                                        if(accountInfoHashMap.containsKey(account_Number)) {
+                                        if(ll.checkAccountNumberExist(customerId,account_Number)){
+                                            ll.updateCustomerStatusActive(customerId, account_Number);
+                                            ll.showData();
+                                        }else{
+                                            System.out.println("You have entered the wrong account number");
+                                        }
+                                        break;
+                                    }
+                                    case 3:{
+                                        break;
+                                    }
+                                }
                             } else {
-                                System.out.println("Your id not active\nDo you want to activate your account?\n1.Yes\n2.No\n");
+                                System.out.println("Your id not active\nDo you want to activate your account?\n1.Yes and I want to activate Existing account\n" +
+                                        "2.Yes and I wanna create new account\n3.No\n");
                                 int option = scan.nextInt();
                                 switch (option) {
                                     case 1: {
                                         System.out.println("Enter your Existing Account number");
                                         long account_Number = scan.nextLong();
                                        // System.out.println(accountInfoHashMap.get(customerId));
-                                        if(accountInfoHashMap.containsKey(account_Number)) {
+//                                        if(accountInfoHashMap.containsKey(account_Number)) {
+                                        if(ll.checkAccountNumberExist(customerId,account_Number)){
                                             ll.updateCustomerStatusActive(customerId, account_Number);
                                             ll.showData();
                                         }else{
@@ -93,6 +119,18 @@ public class TestRunner {
 
                                     }
                                     case 2: {
+                                        scan.nextLine();
+                                        System.out.println("Enter your Bank Name");
+                                        String bank = scan.nextLine();
+                                        System.out.println("Enter your Account number");
+                                        long accountNumber = scan.nextLong();
+                                        System.out.println("Enter your Balance");
+                                        long balance = scan.nextLong();
+                                        accountInfo = ObjectHandler.accountObject(customerId, bank, accountNumber, balance);
+                                        arrayList.add(accountInfo);
+                                        break;
+                                    }
+                                    case 3: {
 
                                         break;
                                     }
